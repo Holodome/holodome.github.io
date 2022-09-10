@@ -10,32 +10,50 @@ class HllVm {
     }
 
     interpret(code) {
-        this.hll_interpret(this.vm, "wasm", code, true);
+        this.hll_interpret(this.vm, "wasm", code, false);
     }
 }
 
 let vm = null;
 
 const handle_print = (text) => {
-    document.getElementById("editor-output-code").value = text;
+    document.getElementById("editor-output-code").value += text + "\n";
 };
+
+const playground_on_input = (text) => {
+
+};
+
+const playground_sync_scroll = (it) => {
+
+};
+
+const playground_handle_key_down = (it) => {
+
+};
+
 
 window.onload = (_) => {
     Module({
         print: handle_print
     }).then((Module) => {
-        Module["print"] = (text) => {
-            console.log("hello)))))))", text)
-        };
         const hll_make_vm = Module.cwrap("hll_make_vm", "number", ["number"]);
         const hll_interpret = Module.cwrap("hll_interpret", "number", ["number", "string", "string", "number"]);
         const hll_delete_vm = Module.cwrap("hll_delete_vm", null, ["number"]);
         vm = new HllVm(hll_make_vm, hll_interpret, hll_delete_vm);
-    }).catch((err) => console.error("Fatal error: Failed to initialize wasm", err))
+    }).catch((err) => console.error("Fatal error: Failed to initialize wasm", err));
 
     document.getElementById("run").onclick = () => {
+        document.getElementById("editor-output-code").value = "";
         const code = document.getElementById("editor-playground-code").value;
         vm.interpret(code);
-        console.log("executed");
-    }
+    };
+
+    document.getElementById("editor-playground-code").oninput = () => {
+        playground_on_input(this.value);
+        playground_sync_scroll(this);
+    };
+    document.getElementById("editor-playground-code").onscroll = playground_on_input;
+    document.getElementById("editor-playground-code").onkeydown = playground_handle_key_down;
+
 };
