@@ -21,7 +21,12 @@ const handle_print = (text) => {
 };
 
 const playground_on_input = (text) => {
+    let result_element = document.getElementById("editor-playground-highlighting-content");
+    if (text[text.length - 1] === '\n') {
+        text += " ";
+    }
 
+    result_element.innerHTML = text.replace(new RegExp("&", "g"))
 };
 
 const playground_sync_scroll = (it) => {
