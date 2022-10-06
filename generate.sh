@@ -17,8 +17,8 @@ mdbook build
 popd
 popd
 
-# copy webassembly output in this dir
-
+# copy webassembly output
+# copy book
 
 mkdir -p generated
 cp ../build/hololisp.js generated
