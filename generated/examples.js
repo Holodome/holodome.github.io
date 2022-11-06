@@ -5,8 +5,8 @@ export const Examples = {
 ;;
 
 (define VISITED 1)
-(define WIDTH 40)
-(define HEIGHT 40)
+(define WIDTH 20)
+(define HEIGHT 20)
 
 (define (print-board board)
   (when board
