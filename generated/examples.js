@@ -1,0 +1,122 @@
+export const Examples = {
+"maze generator": `;;
+;; Maze generator
+;; hololisp version
+;;
+
+(define VISITED 1)
+(define WIDTH 40)
+(define HEIGHT 40)
+
+(define (print-board board)
+  (when board
+    (print (amap (if (= it VISITED) '- '@) (car board)))
+    (print-board (cdr board))))
+
+(define (set-at! board x y value)
+  (set! (nth x (nth y board)) value))
+
+(define (get-at board x y)
+  (nth x (nth y board)))
+
+(define (is-empty? board x y)
+  (/= (get-at board x y) VISITED))
+
+(define (create-board width height)
+  (amap (amap 0 (range width)) (range height)))
+
+(define (neighbours-4- last-pos)
+  (let ((x (car last-pos))
+         (y (cdr last-pos)))
+    (list (cons (- x 1) y)
+          (cons x (- y 1))
+          (cons x (+ y 1))
+          (cons (+ x 1) y))))
+
+(define (neighbours-corners- last-pos)
+  (let ((x (car last-pos))
+         (y (cdr last-pos)))
+    (list (cons (- x 1) (- y 1))
+          (cons (- x 1) (+ y 1))
+          (cons (+ x 1) (- y 1))
+          (cons (+ x 1) (+ y 1)))))
+
+(define (neighbours-corners last-pos)
+  (filter (lambda (pos) (and (>= (car pos) 0)
+                          (< (car pos) WIDTH)
+                          (>= (cdr pos) 0)
+                          (< (cdr pos) HEIGHT)))
+    (neighbours-corners- last-pos)))
+
+(define (neighbours-4 last-pos)
+  (filter (lambda (pos) (and (>= (car pos) 0)
+                          (< (car pos) WIDTH)
+                          (>= (cdr pos) 0)
+                          (< (cdr pos) HEIGHT)))
+    (neighbours-4- last-pos)))
+
+(define (contains where what)
+  (when where
+    (or (and (= (caar where) (car what))
+          (= (cdar where) (cdr what)))
+      (contains (cdr where) what))))
+
+(define (next-possible-cells board last-pos)
+  (filter (lambda (pos)
+            (and
+              ; cell itself is empty
+              (is-empty? board (car pos) (cdr pos))
+              ; cell neighbours are either closed or given cell
+              (all
+                (lambda (pos)
+                  (or
+                    (and (= (car last-pos) (car pos))
+                      (= (cdr last-pos) (cdr pos)))
+                    (is-empty? board (car pos) (cdr pos))))
+                (neighbours-4 pos))
+              ; cell corners are either closed or corners to given cell
+              (all
+                (lambda (pos)
+                  (or
+                    (is-empty? board (car pos) (cdr pos))
+                    (contains (neighbours-4 last-pos) pos)))
+                (neighbours-corners pos))))
+    (neighbours-4 last-pos)))
+
+(define (next-pos board last-pos)
+  (let ((pos (next-possible-cells board last-pos)))
+    (when pos (nth (random (length pos)) pos))))
+
+(define (make-path board stack-path)
+  (when stack-path
+    (let ((new-pos (next-pos board (car stack-path))))
+      (if new-pos
+        (progn
+          (set-at! board (car new-pos) (cdr new-pos) VISITED)
+          (make-path board (cons new-pos stack-path)))
+        (make-path board (cdr stack-path))))))
+
+(define start-pos-x (random WIDTH))
+(define start-pos-y (random WIDTH))
+(define board (create-board WIDTH WIDTH))
+(set-at! board start-pos-x start-pos-y VISITED)
+(define stack (list (cons start-pos-x start-pos-y)))
+(make-path board stack)
+(print-board board)
+`,
+"quicksort": `(defmacro (compare pred pivot)
+  (list 'lambda (list 'it) (list pred 'it pivot)))
+
+(define (qsort lis)
+  (when lis
+    (let ((pivot (car lis))
+           (lis (cdr lis)))
+      (append
+        (qsort (filter (compare < pivot) lis))
+        (list pivot)
+        (qsort (filter (compare >= pivot) lis))))))
+
+(print (qsort (list 5 6 2 1 4 5 2 6 3 9 1)))
+`,
+"hello world": `(print 'hello-world)`,
+};
