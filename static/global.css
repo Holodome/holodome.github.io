@@ -1,5 +1,5 @@
 html, body {
-    font-family: "Liberation Mono", sans-serif;
+    font-family: "Fira Mono", sans-serif;
     background-color: #222222;
     color: #EEE;
     display: block;
@@ -104,6 +104,14 @@ footer {
     right: 0;
     position: relative;
     top: 25%;
+}
+
+@media only screen and (max-width: 768px) {
+    .editor-controls-buttons {
+        float: left;
+        position: relative;
+        top: -10%;
+    }
 }
 
 .editor-controls button, .editor-controls select {
