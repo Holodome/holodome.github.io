@@ -1,59 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
-  <title>hololisp playground</title>
-
-  <link rel="stylesheet" href="static/global.css">
-  <link rel="stylesheet" href="static/normalize.css">
-  <script type="module" src="generated/hololisp.js"></script>
-  <script type="module" src="src/main.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>holodome</title>
 </head>
+
 <body>
+    <h1>About me</h1>
+    <p>
+        I am an undergraduate student currently in the third year of
+        a four-year B.Sc. degree in <i>Software engineering</i> at Bauman Moscow
+        State Technical University (<a href="http://iu7.bmstu.ru/">IU7</a>).
+        I am interested in systems programming: operating systems, databases,
+        device drivers, compilers.
+        I am currently working at Huawei Research and development department in
+        Database Intelligence and Optimization center laboratory.
+    </p>
 
-<nav>
-  <a class="name" href="/"><span>hololisp</span></a>
-</nav>
+    <h1>Educaction</h1>
+    <p>
+        Software engineering B.Sc. BMSTU, expected 2025
+    </p>
+    <h1>Experience</h1>
+    <p>
+        I am most proficient in developing operating systems and
+        compilers. I am passionate about discrete maths, functional programming,
+        low-level optimizations and systems architecture.
+        In my work and and personal endeavors I have worked with
+        following technologies:
+    </p>
+    <ul>
+        <li>C/C++ compiler development and static analysis</li>
+        <li>Linux device drivers</li>
+        <li>Television: Teletext subtitles rolling</li>
+        <li>Database managment systems development: PostgreSQL, SQLite</li>
+        <li>Functional programming languages: Haskell, Scala, Elm, Scheme</li>
+        <li>Microcontroller programming: Rust, C, stm32, Raspberry Pi Pico</li>
+        <li>Computer graphics: OpenGL, Vulkan, Game engines</li>
+        <li>Assembly SIMD programming</li>
+    </ul>
 
-<div class="editor">
-  <div class="editor-controls">
-    <h3>hololisp playground</h3>
-    <span class="editor-controls-buttons">
-      <button id="run" class="editor-controls-button-run">Run</button>
-      <label>
-        <select id="examples">
-        </select>
-      </label>
-    </span>
-  </div>
+    You can check out what I did as part of 
+    my studies in University: <a href="https://github.com/Holodome/BMSTU">link</a>.
 
-  <div class="editor-playground">
-    <textarea rows=25 id="editor-playground-code"
-              class="editor-playground-code" autocomplete="off" spellcheck="false"></textarea>
-  </div>
+    <h1>Personal projects</h1>
+    <h2>moOSe</h2>
+    <p>
+        Ambitious project to write operating system completely from 
+        scratch. It is an operating system similar to UNIX for amd64. 
+        It includes a multitasking kernel, virtual file system, 
+        support for multiple native file systems, driver system, 
+        internet and its own bootloader.
+    </p>
+    <p><a href="https://github.com/Holodome/moose">repo</a></p>
+    <h2>hololisp</h2>
+    <p>
+        A project to write an interpreter for a dialect of LISP in C.
+        Implemented a virtual machine with bytecode pre-compilation,
+        garbage collector, tail recursion optimization and macro system.
+        The frontend is powered by WebAssembly.
+    </p>
+    <p><a href="https://holodome.github.io/hololisp">playground</a></p>
+    <p><a href="https://github.com/Holodome/hololisp">repo</a></p>
+    <h2>lcd-clock-rs</h2>
+    <p>
+        Firmward for Raspberry Pi Pico microcontroller used
+        with <a href="https://www.waveshare.com/lcd-clock-a.htm">hardware kit</a>.
+        This is a retro-styled clock with 6 TFT LCD's, several buttons and ambient LED's.
+        When I have bought clock kit official resources lacked firmware for it, so I had
+        decided to write my own. It turned out to be quite fun little project.
+    </p>
+    <p><a href="https://github.com/Holodome/lcd-clock-rs">repo</a></p>
+    <h2>Ray</h2>
+    <p>School ray tracer project. Although it does not try hard to be original,
+        as it is mostly based on awesome
+        <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html">ray tracing in one weekend book
+            series</a>,
+        I think the code is well-structured in procedural C style. This is small
+        application that does not try hard to be well-designed and thus is very simple
+        and straightfoward to read.
+    </p>
+    <p><a href="https://github.com/Holodome/ray">repo</a></p>
 
-  <h4>Output</h4>
-  <div class="editor-output">
-    <textarea rows=5 id="editor-output-code" disabled></textarea>
-  </div>
-</div>
-
-<footer>
-  <div class="github-icon">
-    <span class="github-badge">
-    </span>
-    GitHub:
-    <a href="https://github.com/holodome" class="github-link">
-      Holodome
-    </a>
-  </div>
-</footer>
-
+    <h1>Contact details</h1>
+    <p>email: holomoose@gmail.com</p>
+    <p>github: <a href="https://github.com/holodome">holodome</a></p>
+    <p>telegram: <a href="https://t.me/holodome">holodome</a></p>
 </body>
+
 </html>
