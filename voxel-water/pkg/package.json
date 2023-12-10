@@ -1,0 +1,14 @@
+{
+  "name": "voxel-water",
+  "version": "0.1.0",
+  "files": [
+    "voxel_water_bg.wasm",
+    "voxel_water.js",
+    "voxel_water.d.ts"
+  ],
+  "module": "voxel_water.js",
+  "types": "voxel_water.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
