@@ -164,7 +164,6 @@ Array size can be arbitrary, but in range 1024-16384.</p>
 </ul>
 <h2 id="in-search-of-fastest-code"><a class="header" href="#in-search-of-fastest-code">In search of fastest code</a></h2>
 <h3 id="naive-solution"><a class="header" href="#naive-solution">Naive solution</a></h3>
-<h4 id="code"><a class="header" href="#code">Code</a></h4>
 <pre><code class="language-cpp">float sum(size_t count, const float *data) {
     float accum = 0;
     for (size_t i = 0; i &lt; count; ++i)
@@ -245,7 +244,7 @@ Compilers have option <code>-ffast-math</code> to relax this a bit.</p>
 <h4 id="gcc-1"><a class="header" href="#gcc-1">GCC</a></h4>
 <p>Compiling the code using GCC with <code>-ffast-math</code> we get the same result.</p>
 <blockquote>
-<p>We could get GCC to generate better code with <code>-funroll-loops</code> and <code>-fvariable-expansion-in-unroller</code> flags (But if compilers were any good at their job we would need also these flags).</p>
+<p>We could get GCC to generate better code with <code>-funroll-loops</code> and <code>-fvariable-expansion-in-unroller</code> flags (But if compilers were any good at their job we would have no need in these flags).</p>
 </blockquote>
 <h4 id="clang-1"><a class="header" href="#clang-1">Clang</a></h4>
 <p>Compiling the code using Clang with <code>-ffast-math</code> we get the following code:</p>
@@ -356,9 +355,9 @@ UICA would say that using 8 accumulators instead of 4 would provide twice the th
 <p>We can try to guess. Let's calculate the time throughput for <code>double</code> and <code>float</code> sums using AVX-512.
 They take 56 and 31 ns respectively. They process 8 * 1024 = 8192 and 4 * 1024 = 4096 bytes respectively.
 This is 146 bytes/ns and 132 bytes/ns throughput. This is about 140 GB/s.</p>
-<p>This sounds like a loot. We can checks <a href="https://travisdowns.github.io/blog/2019/06/11/speed-limits.html">Performance speed limits</a>, or just google - what is the speed of memory for fastest access.
+<p>This sounds like a lot. We can checks <a href="https://travisdowns.github.io/blog/2019/06/11/speed-limits.html">Performance speed limits</a>, or just google - what is the speed of memory for fastest access.
 Array data is accessed through L1 cache. L1 on Cascade Lake works 64 bytes/per cycle.
-Knowing that our CPU operates at about 3GHz, we get 180 GB/s of maximum possible throughput.</p>
+Knowing that our CPU operates at about 3GHz, we get 182 GB/s of maximum possible throughput.</p>
 <p>Our code hit the L1 cache speed limit - it can't get any faster. This means that we process data faster than we read it, so, as I see it, this is satisfactory result.</p>
 
                     </main>
@@ -366,6 +365,9 @@ Knowing that our CPU operates at about 3GHz, we get 180 GB/s of maximum possible
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
 
+                            <a rel="next prefetch" href="../simd/8bits_8bytes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -374,6 +376,9 @@ Knowing that our CPU operates at about 3GHz, we get 180 GB/s of maximum possible
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
 
+                    <a rel="next prefetch" href="../simd/8bits_8bytes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
