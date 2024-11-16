@@ -233,7 +233,7 @@ UICA tells us in the second line:</p>
 <p>Modern CPUs are pipelined, and multiple iterations of loop can be running simultaneously. That works if they do not have data dependencies (also called <a href="https://en.wikipedia.org/wiki/Hazard_(computer_architecture)">data hazards</a>).</p>
 <p>UICA provides us with pipeline view. We can see that each next addition cannot execute <code>E</code> until previous finished running (this is indicated by <code>D</code> - dependency).
 So, loop unrolling does not matter because all the additions are waiting on the same register to be updated.
-<img src="simd/image.png" alt="alt text" /></p>
+<img src="image.png" alt="alt text" /></p>
 <h4 id="improving-compiler-result"><a class="header" href="#improving-compiler-result">Improving compiler result</a></h4>
 <p>We see that both GCC and Clang generate code that adds all array elements to a single accumulator sequentially.
 This happens because compilers assume that floating-point addition is not commutative (a + b != b + a for any a, b) under the IEEE standard.
@@ -272,7 +272,7 @@ The following throughputs could be achieved if the given property were the only 
   - Ports: 2.00
   - Dependencies: 4.00
 </code></pre>
-<p><img src="simd/image-1.png" alt="alt text" /></p>
+<p><img src="image-1.png" alt="alt text" /></p>
 <blockquote>
 <p>Notice that UICA still tells us that this code is dependency-bound</p>
 </blockquote>
@@ -307,7 +307,7 @@ double f64_arr_sum_w4(const double *arr, int count)
 }
 </code></pre>
 <blockquote>
-<p>What is happening in <code>hsum_double_avx</code> is not very important. You can read more about the function used <a href="https://stackoverflow.com/questions/49941645/get-sum-of-values-stored-in-m256d-with-sse-avx">in this StackOverflow answer</a>.</p>
+<p>What happens in <code>hsum_double_avx</code> is not very important. You can read more about the function used <a href="https://stackoverflow.com/questions/49941645/get-sum-of-values-stored-in-m256d-with-sse-avx">in this StackOverflow answer</a>.</p>
 </blockquote>
 <p>If we use 4 accumulators here, and add them up in the end, we would get pretty much the same code as clang generates.</p>
 <p>The question becomes, how many accumulators should we use?</p>

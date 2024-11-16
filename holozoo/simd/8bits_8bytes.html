@@ -325,6 +325,9 @@ void avx_compare32_w32(const int32_t *a, const int32_t *b, bool *result, int nva
 But bithack performs pretty well for such simple solution.</p>
 <p>But the main point here is that using other number of vector registers allows us to avoid this task altogether, producing faster code on the way.</p>
 <p>Anyway, I think this was an interesting problem to investigate, despite being useless on practice, as there are easy ways to avoid this problem. Extracting 16, 32, or 64 bits to bytes is much less problematic. And this problem is completely absent when using AVX-512 as there is <code>VMOVDQU8</code> <a href="https://www.felixcloutier.com/x86/movdqu:vmovdqu8:vmovdqu16:vmovdqu32:vmovdqu64">instruction</a>, which allows zero-masking, producing the same result.</p>
+<h2 id="references"><a class="header" href="#references">References</a></h2>
+<p>The idea is described <a href="https://stackoverflow.com/questions/14547087/extracting-bits-with-a-single-multiplication">here</a>.
+Basic version of code is <a href="https://stackoverflow.com/questions/8461126/how-to-create-a-byte-out-of-8-bool-values-and-vice-versa/51750902#51750902">here</a>, but it does not work for the little-endian as expected (meaning we can't recast result value correctly to bool).</p>
 
                     </main>
 
