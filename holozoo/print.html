@@ -351,7 +351,7 @@ AVX-512 instructions take the same time to decode and execute, but are able to p
 We can also see that using 8 accumulators for doing sum of <code>float</code> array using AVX (what we did in first part of post) is faster with 8 accumulators, than with 4 (as clang generated). But this difference is unimportant.
 UICA would say that using 8 accumulators instead of 4 would provide twice the throughput, but it is clearly not the case.</p>
 <blockquote>
-<p>One of the things I noted for myself - is that throughput predictors are unable to handle throughput-bound problems like this well. It only provides approximate results, and sometimes outright incorrect.</p>
+<p>One of the things I noted for myself - is that throughput predictors are unable to handle memory-bound problems like this well. They usually provide approximate results, and sometimes outright incorrect.</p>
 </blockquote>
 <p>The most important question here - what is the limit? Why code stops getting faster?</p>
 <p>We can try to guess. Let's calculate the time throughput for <code>double</code> and <code>float</code> sums using AVX-512.
@@ -408,7 +408,7 @@ This means that we can select first n bits and store in arbitrary n places in de
 <p>Bithack is based on idea that we can use multiplication to place required bits into required positions.
 This is most obvious if we write multiplication the long way - as we all did in school.
 Let's say, for simplicity, that we deal with 4 bits, and want to extract them to 4 bytes.
-Practically it means extracting each bit and placing it into first position of 4 each of the 4 bytes.</p>
+Practically it means extracting each bit and placing it into first position of each of the 4 bytes.</p>
 <p>Let's write 4 bit value as <code>dcba</code> (in little-endian bit order). Each letter represents bit value (either 1, or 0).</p>
 <p>Right now I will write a series of operations that correspond to this code <code>((bits * magic) &amp; mask) &gt;&gt; shift</code>.
 After that I will explain what happened.</p>
@@ -423,7 +423,7 @@ After that I will explain what happened.</p>
 <p>Result of described operations in what we want - but with reversed order. We'll deal with order later, right now we want to understand what happened.
 Each octet in <code>magic</code> has only 1 bit set. When we multiply octet, containing input bits by this magic number we effectively copy the input bits into each octet, shifted left.
 Thus, when we mask the result of previous operation with correct mask, we are able to select different bits in each octet.
-After that we only have to put these bits into correct position.</p>
+After that we only have to put these bits into correct positions.</p>
 <p>The code for 8 bits is the following:</p>
 <pre><code class="language-cpp">void unpack(uint8_t bits, bool bools[8]) {
 	uint64_t magic = 0x8040201008040201ul;
@@ -432,7 +432,7 @@ After that we only have to put these bits into correct position.</p>
 	memcpy(bools, &amp;t, sizeof(t)); // NOT CORRECT!!!!!!
 }
 </code></pre>
-<p>There is only one problem - the order of bytes reversed. We can mitigate that using <code>BSWAP</code> <a href="https://www.felixcloutier.com/x86/bswap">instruction</a>, but it is quite slow (2 latency, 1 throughput).</p>
+<p>There is only one problem - the order of bytes is reversed. We can mitigate that using <code>BSWAP</code> <a href="https://www.felixcloutier.com/x86/bswap">instruction</a>, but it is quite slow (2 latency, 1 throughput).</p>
 <pre><code class="language-cpp">void unpack(uint8_t bits, bool bools[8]) {
 	uint64_t magic = 0x8040201008040201ul;
 	uint64_t mask  = 0x8080808080808080ul;
@@ -448,7 +448,7 @@ After that we only have to put these bits into correct position.</p>
            efghdc ba 
    efghd cba
 </code></pre>
-<p>We can see that during computation of multiplication certain bits overlap and thus added up and carried - we do not get the 'parallel' multiplication as we did previously, when there was no overlap.
+<p>We can see that during computation of multiplication certain bits overlap and thus get added up and carried - we do not get the 'parallel' multiplication as we did previously, when there was no overlap.
 However, we can see that overlap always occurs with two bits: bit <code>a</code> and bit <code>e</code>. We know for a fact in which location bit <code>a</code> should go - in the first byte. We can mask this bit out and perform multiplication with <code>efghdcb0</code>. This way
 no carry will occur, but bit <code>a</code> should be set in correct position by hand.</p>
 <pre><code class="language-cpp">void unpack(uint8_t bits, bool bytes[8]) {
@@ -491,46 +491,16 @@ void avx_compare32_w8_bmi(const int32_t *a, const int32_t *b, bool *result, int 
     }
 }
 </code></pre>
-<p>I did benchmarks, and also benchmarked versions of these loops that use more vector registers per iteration:</p>
-<pre><code class="language-cpp">void avx_compare32_w16(const int32_t *a, const int32_t *b, bool *result, int nvalues) {
-    for (int i = 0; i &lt; nvalues - 15; i += 16) {
-        __m256i cmp1 = _mm256_cmpgt_epi32(_mm256_loadu_si256((__m256i *)(a + i)), 
-                                          _mm256_loadu_si256((__m256i *)(b + i)));
-        __m256i cmp2 = _mm256_cmpgt_epi32(_mm256_loadu_si256((__m256i *)(a + i + 8)), 
-                                          _mm256_loadu_si256((__m256i *)(b + i + 8)));
-        __m256i lo_words = _mm256_packs_epi32(cmp1, cmp2);
-        __m256i cmp_bytes2 = _mm256_packs_epi16(lo_words, lo_words);
-        cmp_bytes2 = _mm256_permutevar8x32_epi32(cmp_bytes2, _mm256_set_epi32(7, 3, 6, 2, 5, 1, 4, 0));
-        __m128i cmp_bytes = _mm256_castsi256_si128(cmp_bytes2);
-        cmp_bytes = _mm_abs_epi8(cmp_bytes);
-        _mm_storeu_si128((__m128i *)(result + i), cmp_bytes);
-    }
-}
-void avx_compare32_w32(const int32_t *a, const int32_t *b, bool *result, int nvalues) {
-    for (int i = 0; i &lt; nvalues - 31; i += 32) {
-        __m256i cmp1 = _mm256_cmpgt_epi32(_mm256_loadu_si256((__m256i *)(a + i)), 
-                                          _mm256_loadu_si256((__m256i *)(b + i)));
-        __m256i cmp2 = _mm256_cmpgt_epi32(_mm256_loadu_si256((__m256i *)(a + i + 8)), 
-                                          _mm256_loadu_si256((__m256i *)(b + i + 8)));
-        __m256i cmp3 = _mm256_cmpgt_epi32(_mm256_loadu_si256((__m256i *)(a + i + 16)), 
-                                          _mm256_loadu_si256((__m256i *)(b + i + 16)));
-        __m256i cmp4 = _mm256_cmpgt_epi32(_mm256_loadu_si256((__m256i *)(a + i + 24)), 
-                                          _mm256_loadu_si256((__m256i *)(b + i + 24)));
-        __m256i lo_words = _mm256_packs_epi32(cmp1, cmp2);
-        __m256i hi_words = _mm256_packs_epi32(cmp3, cmp4);
-        __m256i cmp_bytes = _mm256_packs_epi16(lo_words, hi_words);
-        cmp_bytes = _mm256_abs_epi8(cmp_bytes);
-        cmp_bytes = _mm256_permutevar8x32_epi32(cmp_bytes, _mm256_set_epi32(7, 3, 6, 2, 5, 1, 4, 0));
-        _mm256_storeu_si256((__m256i *)(result + i), cmp_bytes);
-    }
-}
-</code></pre>
+<p>I did benchmarks, and also benchmarked versions of these loops that use more vector registers per iteration: 2 and 4. These use have tasks of unpacking 16 bit to 16 bytes and 32 bits to 32 bytes respectively. These tasks can be solved using other techniques.</p>
+<blockquote>
+<p>I won't provide complete code here for other versions, but you can look <a href="https://stackoverflow.com/questions/48811369/how-to-use-bits-in-a-byte-to-set-dwords-in-ymm-register-without-avx2-inverse-o">here</a> for ideas</p>
+</blockquote>
 <p>These are the results:</p>
 <div class="table-wrapper"><table><thead><tr><th>w32</th><th>w16</th><th>w8 bithack</th><th>w8 pdep</th></tr></thead><tbody>
 <tr><td>78ns</td><td>99ns</td><td>158ns</td><td>105 ns</td></tr>
 </tbody></table>
 </div>
-<p>First, we see that <code>PDEP</code> performs faster than out bithack.
+<p>We see that <code>PDEP</code> version performs better than bithack.
 But bithack performs pretty well for such simple solution.</p>
 <p>But the main point here is that using other number of vector registers allows us to avoid this task altogether, producing faster code on the way.</p>
 <p>Anyway, I think this was an interesting problem to investigate, despite being useless on practice, as there are easy ways to avoid this problem. Extracting 16, 32, or 64 bits to bytes is much less problematic. And this problem is completely absent when using AVX-512 as there is <code>VMOVDQU8</code> <a href="https://www.felixcloutier.com/x86/movdqu:vmovdqu8:vmovdqu16:vmovdqu32:vmovdqu64">instruction</a>, which allows zero-masking, producing the same result.</p>

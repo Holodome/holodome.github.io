@@ -349,7 +349,7 @@ AVX-512 instructions take the same time to decode and execute, but are able to p
 We can also see that using 8 accumulators for doing sum of <code>float</code> array using AVX (what we did in first part of post) is faster with 8 accumulators, than with 4 (as clang generated). But this difference is unimportant.
 UICA would say that using 8 accumulators instead of 4 would provide twice the throughput, but it is clearly not the case.</p>
 <blockquote>
-<p>One of the things I noted for myself - is that throughput predictors are unable to handle throughput-bound problems like this well. It only provides approximate results, and sometimes outright incorrect.</p>
+<p>One of the things I noted for myself - is that throughput predictors are unable to handle memory-bound problems like this well. They usually provide approximate results, and sometimes outright incorrect.</p>
 </blockquote>
 <p>The most important question here - what is the limit? Why code stops getting faster?</p>
 <p>We can try to guess. Let's calculate the time throughput for <code>double</code> and <code>float</code> sums using AVX-512.
