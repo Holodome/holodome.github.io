@@ -300,20 +300,18 @@ This is 32 times more than previous version!</p>
 
 double f64_arr_sum_w4(const double *arr, int count)
 {
-    double sum = 0.0;
     __m256d accum0 = _mm256_setzero_pd();
     for (int i = 0; i &lt; count - 3; i += 4) {
         __m256d v0 = _mm256_load_pd(&amp;arr[i]);
         accum0 = _mm256_add_pd(accum0, v0);
     } 
-    sum = hsum_double_avx(accum0);
-    return sum;
+    return hsum_double_avx(accum0);
 }
 </code></pre>
 <blockquote>
 <p>What happens in <code>hsum_double_avx</code> is not very important. You can read more about the function used <a href="https://stackoverflow.com/questions/49941645/get-sum-of-values-stored-in-m256d-with-sse-avx">in this StackOverflow answer</a>.</p>
 </blockquote>
-<p>If we use 4 accumulators here, and add them up in the end, we would get pretty much the same code as clang generates.</p>
+<p>If we use 4 accumulators here, and add them up in the end, we would get pretty much the same code as clang generates (but for doubles).</p>
 <p>The question becomes, how many accumulators should we use?</p>
 <p>I wrote the this function for all datatypes of interest (<code>int32_t</code>, <code>int64_t</code>, <code>float</code>, <code>double</code>), with accumulator count varying from 1 to 16 (as there are 16 ymm registers, and 32 zmm registers with AVX-512).
 I did this using AVX and AVX-512 instructions.</p>
@@ -361,7 +359,7 @@ They take 56 and 31 ns respectively. They process 8 * 1024 = 8192 and 4 * 1024 =
 This is 146 bytes/ns and 132 bytes/ns throughput. This is about 140 GB/s.</p>
 <p>This sounds like a lot. We can checks <a href="https://travisdowns.github.io/blog/2019/06/11/speed-limits.html">Performance speed limits</a>, or just google - what is the speed of memory for fastest access.
 Array data is accessed through L1 cache. L1 on Cascade Lake works 64 bytes/per cycle.
-Knowing that our CPU operates at about 3GHz, we get 182 GB/s of maximum possible throughput.</p>
+Knowing that our CPU operates at about 3GHz, we get 192 GB/s of maximum possible throughput.</p>
 <p>Our code hit the L1 cache speed limit - it can't get any faster. This means that we process data faster than we read it, so, as I see it, this is satisfactory result.</p>
 
                     </main>
