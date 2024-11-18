@@ -201,7 +201,11 @@ Notice that there are two additions: GCC decided to unroll the loop to process 2
 </code></pre>
 <p>Clang unrolls loop to process 8 items per iteration.</p>
 <h4 id="comparison"><a class="header" href="#comparison">Comparison</a></h4>
-<p>Let's plug this code into <a href="simd/uica.uops.info">UICA</a> to calculate loop throughput.</p>
+<p>Let's plug this code into <a href="https://uica.uops.info">uiCA</a> to calculate loop throughput.</p>
+<blockquote>
+<p>uiCA is throughput prediction tool described in <a href="https://arxiv.org/pdf/2107.14210">uiCA: Accurate Throughput Prediction of
+Basic Blocks on Recent Intel Microarchitectures</a></p>
+</blockquote>
 <p>GCC:</p>
 <pre><code>Throughput (in cycles per iteration): 8.00
 Bottleneck: Dependencies
@@ -229,11 +233,11 @@ The following throughputs could be achieved if the given property were the only 
 <p>The throughput is the same.</p>
 <p>We can plug the code that does not unroll the loop, and see that we would get the same 1 byte/cycle.</p>
 <p>What's the deal here?
-UICA tells us in the second line:</p>
+uiCA tells us in the second line:</p>
 <pre><code>Bottleneck: Dependencies
 </code></pre>
 <p>Modern CPUs are pipelined, and multiple iterations of loop can be running simultaneously. That works if they do not have data dependencies (also called <a href="https://en.wikipedia.org/wiki/Hazard_(computer_architecture)">data hazards</a>).</p>
-<p>UICA provides us with pipeline view. We can see that each next addition cannot execute <code>E</code> until previous finished running (this is indicated by <code>D</code> - dependency).
+<p>uiCA provides us with pipeline view. We can see that each next addition cannot execute <code>E</code> until previous finished running (this is indicated by <code>D</code> - dependency).
 So, loop unrolling does not matter because all the additions are waiting on the same register to be updated.
 <img src="simd/image.png" alt="alt text" /></p>
 <h4 id="improving-compiler-result"><a class="header" href="#improving-compiler-result">Improving compiler result</a></h4>
@@ -263,7 +267,7 @@ Compilers have option <code>-ffast-math</code> to relax this a bit.</p>
 Secondly, it uses <code>ps</code> versions of addition - adding together <code>packed scalars</code>. Each <code>vaddps</code> instruction adds together 8 float values in parallel.
 We can see that clang reduced the unroll count to 4 (previously being 8), and uses 4 distinct accumulators.
 In the function epilogue these accumulators are added together to produce the final result.</p>
-<p>What UICA tells us about this code?</p>
+<p>What uiCA tells us about this code?</p>
 <pre><code class="language-x86asm">Throughput (in cycles per iteration): 4.02
 Bottleneck: Dependencies
 
@@ -276,7 +280,7 @@ The following throughputs could be achieved if the given property were the only 
 </code></pre>
 <p><img src="simd/image-1.png" alt="alt text" /></p>
 <blockquote>
-<p>Notice that UICA still tells us that this code is dependency-bound</p>
+<p>Notice that uiCA still tells us that this code is dependency-bound</p>
 </blockquote>
 <p>Code has predicated throughput of 4 cycles/iteration. It processes 8 * 4 * 4 = 128 bytes/iteration. So, it processes 32 bytes/cycle.
 This is 32 times more than previous version!</p>
@@ -349,7 +353,7 @@ I used array size of 1024.</p>
 AVX-512 instructions take the same time to decode and execute, but are able to process more elements, as well as remove pressure from memory subsystem, issuing less requests.</p>
 <p>We can see that all datatypes converge to the same time as number of accumulators increases. We can say that speed does not degrades with greater accumulator count, but it stops improving from certain point either.
 We can also see that using 8 accumulators for doing sum of <code>float</code> array using AVX (what we did in first part of post) is faster with 8 accumulators, than with 4 (as clang generated). But this difference is unimportant.
-UICA would say that using 8 accumulators instead of 4 would provide twice the throughput, but it is clearly not the case.</p>
+uiCA would say that using 8 accumulators instead of 4 would provide twice the throughput, but it is clearly not the case.</p>
 <blockquote>
 <p>One of the things I noted for myself - is that throughput predictors are unable to handle memory-bound problems like this well. They usually provide approximate results, and sometimes outright incorrect.</p>
 </blockquote>
@@ -384,6 +388,7 @@ Do it as fast as possible.</p>
 One of the instructions provided is <code>PDEP</code>: <a href="https://www.felixcloutier.com/x86/pdep">parallel bits deposit</a>.</p>
 <p>It takes two 32-bit (or two 64-bit) operands and stores first n bits from first operand into destination using n positions selected with second operand, indicated with set bits.
 This means that we can select first n bits and store in arbitrary n places in destination, provided that order stays the same.</p>
+<p><img src="simd/image-2.png" alt="alt text" /></p>
 <blockquote>
 <p>You can find code for software implementation <a href="https://stackoverflow.com/questions/77834169/what-is-a-fast-fallback-algorithm-which-emulates-pdep-and-pext-in-software">here</a>.</p>
 </blockquote>
@@ -402,7 +407,7 @@ This means that we can select first n bits and store in arbitrary n places in de
 <tr><td>TP</td><td>1</td><td>1</td><td>19</td><td>1</td></tr>
 </tbody></table>
 </div>
-<p>Zen2 is 2019 architecture (same as Ice Lake), and it quite possible to find machines that have this horrendously implemented <code>PDEP</code>.</p>
+<p>Zen2 is 2019 architecture (same as Ice Lake), and it is quite possible to find machines that have this horrendously implemented <code>PDEP</code>.</p>
 <h3 id="bithack"><a class="header" href="#bithack">Bithack</a></h3>
 <p>Bithacks come to the rescue. As it turns out, it is possible to do required operation using nothing but arithmetic and bit operations without any array accesses.</p>
 <p>Bithack is based on idea that we can use multiplication to place required bits into required positions.

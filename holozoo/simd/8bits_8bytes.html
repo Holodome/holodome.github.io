@@ -175,6 +175,7 @@ Do it as fast as possible.</p>
 One of the instructions provided is <code>PDEP</code>: <a href="https://www.felixcloutier.com/x86/pdep">parallel bits deposit</a>.</p>
 <p>It takes two 32-bit (or two 64-bit) operands and stores first n bits from first operand into destination using n positions selected with second operand, indicated with set bits.
 This means that we can select first n bits and store in arbitrary n places in destination, provided that order stays the same.</p>
+<p><img src="image-2.png" alt="alt text" /></p>
 <blockquote>
 <p>You can find code for software implementation <a href="https://stackoverflow.com/questions/77834169/what-is-a-fast-fallback-algorithm-which-emulates-pdep-and-pext-in-software">here</a>.</p>
 </blockquote>
@@ -193,7 +194,7 @@ This means that we can select first n bits and store in arbitrary n places in de
 <tr><td>TP</td><td>1</td><td>1</td><td>19</td><td>1</td></tr>
 </tbody></table>
 </div>
-<p>Zen2 is 2019 architecture (same as Ice Lake), and it quite possible to find machines that have this horrendously implemented <code>PDEP</code>.</p>
+<p>Zen2 is 2019 architecture (same as Ice Lake), and it is quite possible to find machines that have this horrendously implemented <code>PDEP</code>.</p>
 <h3 id="bithack"><a class="header" href="#bithack">Bithack</a></h3>
 <p>Bithacks come to the rescue. As it turns out, it is possible to do required operation using nothing but arithmetic and bit operations without any array accesses.</p>
 <p>Bithack is based on idea that we can use multiplication to place required bits into required positions.
