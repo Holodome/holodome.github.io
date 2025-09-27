@@ -1,0 +1,1951 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Sep 27 14:19:30 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CSBENCH</title>
+
+</head>
+<body>
+
+<h1 align="center">CSBENCH</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#Benchmark stop condition options">Benchmark stop condition options</a><br>
+<a href="#Warmup options">Warmup options</a><br>
+<a href="#Round options">Round options</a><br>
+<a href="#Benchmark setup options">Benchmark setup options</a><br>
+<a href="#Command input and output options">Command input and output options</a><br>
+<a href="#Measurement options">Measurement options</a><br>
+<a href="#Parameterization options">Parameterization options</a><br>
+<a href="#Alternative mode options">Alternative mode options</a><br>
+<a href="#Analysis options">Analysis options</a><br>
+<a href="#Output options">Output options</a><br>
+<a href="#Miscellaneous options">Miscellaneous options</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:9%; margin-top: 1em">csbench &minus;
+batteries included command&minus;line benchmarking tool</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:9%; margin-top: 1em"><b>csbench</b>
+[<b>options</b>] command...</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:9%; margin-top: 1em">Command&minus;line
+benchmarking tool which includes:</p>
+
+<p style="margin-left:18%; margin-top: 1em">* Statistical
+analysis across multiple runs. <br>
+* Statistical comparison between multiple benchmarks. <br>
+* Support for arbitrary shell commands. <br>
+* Benchmarks can be executed in rounds of several
+consecutive runs. <br>
+* Warmup runs can be executed before each benchmark or
+round. <br>
+* Benchmarks can receive common input either from file or
+string specified in command&minus;line. <br>
+* Benchmarks can be parameterized with variable, substituted
+in command string or input file name or input string. <br>
+* Benchmarks can include custom measurements, whose values
+are extracted from each command&rsquo;s stdout. <br>
+* Benchmarks&rsquo; measurements can include information
+from &quot;struct rusage&quot; (see getrusage(2)). <br>
+* Benchmarks&rsquo; measurements can include performance
+counter metrics, such as number of cycles, instructions,
+branches taken and branches missed. <br>
+* Parallel execution. <br>
+* Plotting functionality. <br>
+* Generate thorough reports in various formats: HTML,
+Command&minus;line, Markdown. <br>
+* Export results to various formats: CSV, JSON.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<h3>Benchmark stop condition options
+<a name="Benchmark stop condition options"></a>
+</h3>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="18%">
+
+
+<p style="margin-top: 1em"><b>&minus;R</b>,
+<b>&minus;&minus;runs</b> <i>NUM</i></p></td>
+<td width="73%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Run each
+benchmark exactly <i>NUM</i> times in total (not including
+warmup). When set, <b>&minus;&minus;time&minus;limit</b>,
+<b>&minus;&minus;min&minus;runs</b> and
+<b>&minus;&minus;max&minus;runs</b> have no effect.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="32%">
+
+
+<p style="margin-top: 1em"><b>&minus;T</b>,
+<b>&minus;&minus;time&minus;limit</b> <i>DURATION</i></p></td>
+<td width="59%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Run each
+benchmark for at least <i>DURATION</i> seconds in total.
+Affected by <b>&minus;&minus;min&minus;runs</b> and
+<b>&minus;&minus;max&minus;runs</b>. <i>DURARION</i> is a
+real number optionally followed by measurement units
+(&quot;s&quot;, &quot;ms&quot;, &quot;us&quot;,
+&quot;ns&quot;). If units are not specified, seconds are
+assumed.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="18%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;min&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="73%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Run each
+benchmark at least <i>NUM</i> times.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="18%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;max&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="73%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Run each
+benchmark at most <i>NUM</i> times.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h3>Warmup options
+<a name="Warmup options"></a>
+</h3>
+<td width="9%"></td>
+<td width="22%"></td>
+<td width="69%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="22%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;warmup&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="69%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Perform exactly
+<i>NUM</i> warmup runs. When set,
+<b>&minus;&minus;warmup</b>,
+<b>&minus;&minus;min&minus;warmup&minus;runs</b> and
+<b>&minus;&minus;max&minus;warmup&minus;runs</b> have no
+effect.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="20%">
+
+
+<p style="margin-top: 1em"><b>&minus;W</b>,
+<b>&minus;&minus;warmup</b> <i>NUM</i></p></td>
+<td width="71%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Perform warmup
+for at least <i>NUM</i> seconds in total. Affected by
+<b>&minus;&minus;min&minus;warmup&minus;runs</b> and
+<b>&minus;&minus;max&minus;warmup&minus;runs</b>.
+<i>DURARION</i> is a real number optionally followed by
+measurement units (&quot;s&quot;, &quot;ms&quot;,
+&quot;us&quot;, &quot;ns&quot;). If units are not specified,
+seconds are assumed.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="27%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;min&minus;warmup&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="64%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Perform at
+least <i>NUM</i> warmup runs.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="27%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;max&minus;warmup&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="64%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Perform at most
+<i>NUM</i> warmup runs.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="14%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;no&minus;warmup</b></p> </td>
+<td width="77%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Disable
+warmup.</p>
+
+<h3>Round options
+<a name="Round options"></a>
+</h3>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="20%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;round&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="71%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">In a single
+round perform exactly <i>NUM</i> runs. When set,
+<b>&minus;&minus;round&minus;time</b>,
+<b>&minus;&minus;min&minus;round&minus;runs</b> and
+<b>&minus;&minus;max&minus;round&minus;runs</b> have no
+effect.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="20%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;round&minus;time</b>
+<i>NUM</i></p> </td>
+<td width="71%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Each benchmark
+will be run for at least <i>NUM</i> seconds in row. Affected
+by <b>&minus;&minus;min&minus;round&minus;runs</b> and
+<b>&minus;&minus;max&minus;round&minus;runs</b>.
+<i>DURARION</i> is a real number optionally followed by
+measurement units (&quot;s&quot;, &quot;ms&quot;,
+&quot;us&quot;, &quot;ns&quot;). If units are not specified,
+seconds are assumed.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="26%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;min&minus;round&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="65%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">In a single
+round perform at least <i>NUM</i> runs.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="26%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;max&minus;round&minus;runs</b>
+<i>NUM</i></p> </td>
+<td width="65%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">In a single
+round perform at most <i>NUM</i> runs.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="14%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;no&minus;rounds</b></p> </td>
+<td width="77%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Do not split
+execution into rounds.</p>
+
+<h3>Benchmark setup options
+<a name="Benchmark setup options"></a>
+</h3>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="22%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;common&minus;args</b>
+<i>STR</i></p> </td>
+<td width="69%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Append
+<i>STR</i> to each benchmark command.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Example:</p>
+
+<p style="margin-left:27%;"><b>csbench
+&minus;&minus;common&minus;args</b> &rsquo;-Wall -Werror
+-pedantic -O2 main.c&rsquo; gcc clang</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="22%">
+
+
+<p style="margin-top: 1em"><b>&minus;S</b>,
+<b>&minus;&minus;shell</b> <i>SHELL</i></p></td>
+<td width="69%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Set the shell
+to be used for executing benchmark commands. Can be both
+name of shell executable, like &quot;bash&quot;, or a
+command like &quot;bash &minus;&minus;norc&quot;. Either
+way, arguments &quot;-c&quot; and benchmark command string
+are appended to shell argument list. Alternatively,
+<i>SHELL</i> can be set to &quot;none&quot;, or
+&quot;inherit&quot;. If set to &quot;none&quot;, commands
+will be executed directly using execve(2) system call,
+avoiding shell process startup time overhead. If set to
+&quot;inherit&quot;, uses the shell set in <i>SHELL</i>
+variable of calling process.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>&minus;N</b></p></td>
+<td width="88%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">An alias no
+<b>&minus;&minus;shell=none</b>.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="22%">
+
+
+<p style="margin-top: 1em"><b>&minus;P</b>,
+<b>&minus;&minus;prepare</b> <i>CMD</i></p></td>
+<td width="69%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Execute
+<i>CMD</i> in shell before each benchmark run. <i>CMD</i>
+may contain parameter substitutions.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Example:</p>
+
+<p style="margin-left:27%;"><b>csbench
+&minus;&minus;prepare</b>=&rsquo;make clean&rsquo; make</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="24%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;round-prepare</b>
+<i>CMD</i></p> </td>
+<td width="67%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Execute
+<i>CMD</i> in shell in the beggining of each round, before
+the warmup. <i>CMD</i> may contain parameter
+substitutions.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="18%">
+
+
+<p style="margin-top: 1em"><b>&minus;j</b>,
+<b>&minus;&minus;jobs</b> <i>NUM</i></p></td>
+<td width="73%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Executed
+benchmarks in parallel using <i>NUM</i> system threads. By
+default, benchmarks are executed only in one thread.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="26%">
+
+
+<p style="margin-top: 1em"><b>&minus;i</b>,
+<b>&minus;&minus;ignore&minus;failure</b></p> </td>
+<td width="65%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Do not abort
+benchmarking when benchmark commands finishes with
+non&minus;zero exit code.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="15%">
+
+
+<p style="margin-top: 1em"><b>&minus;s</b>,
+<b>&minus;&minus;simple</b></p> </td>
+<td width="76%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Preset to run
+benchmarks using system thread count obtained by executing
+nproc(1), for 1 second without warmup and rounds.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="18%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;shuffle&minus;runs</b></p> </td>
+<td width="73%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Randomize the
+order in which benchmarks are run. By default they are run
+round-robin from first to last.</p>
+
+<h3>Command input and output options
+<a name="Command input and output options"></a>
+</h3>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="15%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;input</b>
+<i>FILE</i></p> </td>
+<td width="76%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Specify file
+that will be used as input for all benchmark commands.
+<i>FILE</i> can include variable substitutions.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="15%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;inputs</b>
+<i>STR</i></p> </td>
+<td width="76%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Specify string
+that will be used as input for all benchmark commands.
+<i>STR</i> can include variable substitutions.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="15%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;inputd</b>
+<i>DIR</i></p> </td>
+<td width="76%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Specify
+directory, all files from which will be used as input for
+all benchmark commands. This effectively works as macro,
+specifying &quot;<b>&minus;&minus;input</b> {file}
+<b>&minus;&minus;param</b> file/...&quot;, where
+&quot;<b>&minus;&minus;param</b>&quot; option is passed a
+list of files contained in <i>DIR</i>.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="13%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;no&minus;input</b></p> </td>
+<td width="78%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Disable input
+(use <i>/dev/null</i> as input). This is a default
+option.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="17%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;output</b>
+<i>KIND</i></p> </td>
+<td width="74%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Control where
+stdout and stderr of benchmark commands is redirected.</p>
+
+<p style="margin-left:18%; margin-top: 1em"><i>KIND</i> can
+be:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>null</p></td>
+<td width="4%"></td>
+<td width="50%">
+</td>
+<td width="23%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%"></td>
+<td width="4%"></td>
+<td width="50%">
+
+
+<p>Redirect output to <i>/dev/null</i> (default).</p></td>
+<td width="23%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%;">inherit</p>
+
+<p style="margin-left:27%;">Don&rsquo;t redirect the output
+at all.</p>
+
+<h3>Measurement options
+<a name="Measurement options"></a>
+</h3>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="14%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;meas</b>
+<i>MEAS</i></p> </td>
+<td width="77%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">List of
+built-in measurements to collect.</p>
+
+<p style="margin-left:18%; margin-top: 1em"><i>MEAS</i> is
+comma-separated list of measurement names, which can be of
+the following:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>wall</p></td>
+<td width="1%"></td>
+<td width="42%">
+</td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%"></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>wall clock time</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>stime</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>kernel CPU time</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>utime</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>userspace CPU time</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>maxrss</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>maximum size of resident set size</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>minflt</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>minor page fault count</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>majflt</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>major page fault count</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>nvcsw</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>voluntary context switch count</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>nivcsw</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>involuntary context switch count</p></td>
+<td width="31%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>cycles</p></td>
+<td width="1%"></td>
+<td width="42%">
+
+
+<p>CPU cycle count</p></td>
+<td width="31%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%;">instructions</p>
+
+<p style="margin-left:27%;">CPU instruction count</p>
+
+<p style="margin-left:18%;">branches</p>
+
+<p style="margin-left:27%;">CPU taken branch count</p>
+
+<p style="margin-left:18%;">branch-misses</p>
+
+<p style="margin-left:27%;">CPU branch misdirection
+count</p>
+
+<p style="margin-left:18%; margin-top: 1em">Measurements
+&quot;stime&quot;, &quot;utime&quot;, &quot;maxrss&quot;,
+&quot;minflt&quot;, &quot;majflt&quot;, &quot;nvcsw&quot;,
+&quot;nivcsw&quot; are obtained from &quot;struct
+rusage&quot; (see getrusage(2)). Measurements
+&quot;cycles&quot;, &quot;instructions&quot;,
+&quot;branches&quot;, &quot;branch-misses&quot; are obtained
+using system performance counters (see perf_event_open(2) on
+Linux). Default measurements are &quot;wall&quot;,
+&quot;stime&quot;, &quot;utime&quot;.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Example:</p>
+
+<p style="margin-left:27%;"><b>csbench
+&minus;&minus;meas</b> cycles,instructions ls</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="17%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;custom</b>
+<i>NAME</i></p> </td>
+<td width="74%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Add custom
+measurement with name <i>NAME</i>. This measurement parses
+stdout of each benchmark command and interprets it in
+seconds.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="24%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;custom&minus;t</b>
+<i>NAME CMD</i></p></td>
+<td width="67%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Add custom
+measurement with name <i>NAME</i>. This measurement pipes
+stdout of each command to <i>CMD</i>, parses its output as a
+single real number and interprets it in seconds.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="32%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;custom&minus;x</b>
+<i>NAME UNITS CMD</i></p></td>
+<td width="59%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Add custom
+measurement with name <i>NAME</i>. This measurement pipes
+stdout of each command to <i>CMD</i>, interprets its output
+as a single real number and interprets it in
+<i>UNITS</i>.</p>
+
+<p style="margin-left:18%; margin-top: 1em"><i>UNITS</i>
+can be one of the following:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>s</p></td>
+<td width="4%"></td>
+<td width="15%">
+</td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%"></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>seconds</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>ms</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>milliseconds</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>us</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>microseconds</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>ns</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>nanoseconds</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>b</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>bytes</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>kb</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>kilobytes</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>mb</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>megabytes</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>gb</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>gigabytes</p></td>
+<td width="58%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>none</p></td>
+<td width="4%"></td>
+<td width="15%">
+
+
+<p>no units</p></td>
+<td width="58%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%;">&lt;UNITS&minus;NAME&gt;</p>
+
+<p style="margin-left:27%;">Use &lt;UNITS&minus;NAME&gt; as
+name</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="32%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;custom&minus;re</b>
+<i>NAME UNITS RE</i></p></td>
+<td width="59%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Add custom
+measurement with name <i>NAME</i>. This measurement regular
+expression <i>RE</i> to extract data from stdout of each
+command, parses first subexpression as a single real number
+and interprets it in <i>UNITS</i>.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Example:</p>
+
+<p style="margin-left:27%;"><b>csbench</b> &rsquo;echo
+hello, $RANDOM&rsquo; <b>&minus;&minus;custom&minus;re</b> m
+s &rsquo;hello, ([0-9.]+)&rsquo;</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="22%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;no&minus;default&minus;meas</b></p> </td>
+<td width="69%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Do not use
+default measurements (which are &quot;wall&quot;,
+&quot;stime&quot;, &quot;utime&quot;).</p>
+
+<h3>Parameterization options
+<a name="Parameterization options"></a>
+</h3>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="14%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;param</b>
+<i>STR</i></p> </td>
+<td width="77%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em"><i>STR</i> is
+of the format &lt;i&gt;/&lt;v&gt;. Add benchmark parameter
+with name &lt;i&gt;. &lt;v&gt; is a comma&minus;separated
+list of parameter values. Parameter can be substituted in
+any command string, in strings supplied to
+<b>&minus;&minus;input</b>, <b>&minus;&minus;inputs</b> and
+<b>&minus;&minus;common&minus;args</b> options.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Example:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="23%">
+
+
+<p>auto</p></td>
+<td width="4%"></td>
+<td width="64%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="23%"></td>
+<td width="4%"></td>
+<td width="64%">
+
+
+<p>select <b>csbench &minus;&minus;param</b>
+n/100,200,400,800 &rsquo;python3 quicksort.py {n}&rsquo;</p></td></tr>
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="23%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;param-range</b>
+<i>STR</i></p> </td>
+<td width="4%"></td>
+<td width="64%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em"><i>STR</i> is
+of the format &lt;i&gt;/&lt;n&gt;/&lt;m&gt;[/&lt;s&gt;]. Add
+benchmark parameter with name &lt;i&gt;, whose values are in
+range from &lt;n&gt; to &lt;m&gt; with step &lt;s&gt;.
+&lt;s&gt; is optional, default is 1.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Example:</p>
+
+<p style="margin-left:27%;"><b>csbench
+&minus;&minus;param-range</b> n/100/500/100 &rsquo;python3
+quicksort.py {n}&rsquo;</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h3>Alternative mode options
+<a name="Alternative mode options"></a>
+</h3>
+<td width="9%"></td>
+<td width="14%"></td>
+<td width="77%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="14%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;load&minus;text</b></p> </td>
+<td width="77%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Load benchmark
+data from CSV files listed in command-line. CSV can either
+be generated by <b>csbench</b> using
+<b>&minus;&minus;csv</b> option, or any external source.
+This option changes interpretation of <b>command...</b> from
+list of commands to benchmark to list of CSV file names.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Format of CSV
+files is the same as generated by csbench for
+&quot;bench_raw_*.csv&quot; files. First line should contain
+measurement names, all other lines should contain values for
+these measurements. <br>
+Example:</p>
+
+<p style="margin-left:27%;"><b>csbench
+&minus;&minus;load&minus;text</b> .csbench/benches_raw_0.csv
+.csbench/bench_raw_1.csv</p>
+
+<p style="margin-left:18%;">Format description:</p>
+
+<p style="margin-left:27%;"># <b>extract</b>=&rsquo;{name}
+n={n}&rsquo; <b>meas</b>=&lt;measname&gt;
+<b>units</b>=&lt;unit&gt; <br>
+&lt;bench1&gt;,&lt;val1&gt;,&lt;val2&gt;,... <br>
+&lt;bench2&gt;,&lt;val1&gt;,&lt;val2&gt;,... <br>
+Header (optional, #-prefixed) <br>
+- <b>extract</b> - pattern for parsing benchmark names. <br>
+- {name} - group name <br>
+- {&lt;var&gt;} - variable placeholder for parameter
+analysis <br>
+- <b>meas</b> - label of the measurement (e.g. time, size).
+<br>
+- <b>units</b> - measurement units: ns, us, ms, s, b, kb,
+mb, gb, none. <br>
+Data lines <br>
+Start with benchmark name (&lt;bench&gt;). Then values, e.g.
+1,2,3... <br>
+Simple Example: <br>
+option1,1,2,3 <br>
+option2,4,5,6 <br>
+Complex Example: <br>
+# <b>extract</b>=&rsquo;{name} n={n}&rsquo;
+<b>meas</b>=mymeas <b>units</b>=ns <br>
+a n=1,1,2,3 <br>
+a n=2,4,5,6 <br>
+b n=1,10,20 <br>
+b n=2,100,200</p>
+
+<p style="margin-left:18%; margin-top: 1em">Note that all
+options listed above in this man page are not usable in this
+mode. All the options listed below can be used (rename, set
+baseline, generate plots, export data etc.).</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="13%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;load&minus;bin</b></p> </td>
+<td width="78%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Load output
+from files in custom binary format. These files can either
+be generated by <b>csbench</b> using
+<b>&minus;&minus;save&minus;bin</b> option, or any external
+source. This option changes interpretation of
+<b>command...</b> from list of commands to benchmark to list
+of binary file names. If <b>command...</b> list is empty,
+directory specified with <b>&minus;&minus;out&minus;dir</b>
+is used. Command can either be name of binary file, or
+directory that contains <b>data.csbench</b> file. This
+matches the output format of
+<b>&minus;&minus;save&minus;bin</b> option.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Binary file
+format lacks specification. Look into <b>csbench</b> sources
+for additional information.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Binary file
+saves all information about benchmark and can be used to
+load it later. Generally, the report generated when running
+benchmark is the same that will be generated when loading
+saved binary data for this benchmark. If multiple files are
+listed, their results are merged. This can be used to do
+comparisons of complex multi-step benchmarks. <br>
+Example:</p>
+
+<p style="margin-left:27%;"><b>csbench</b> ls
+<b>&minus;o</b> bench1 <b>&minus;&minus;save-bin</b></p>
+
+<p style="margin-left:27%; margin-top: 1em"><b>csbench</b>
+pwd <b>&minus;o</b> bench2 <b>&minus;&minus;save-bin</b></p>
+
+<p style="margin-left:27%; margin-top: 1em"><b>csbench
+&minus;&minus;load&minus;bin</b> bench1 bench2</p>
+
+<p style="margin-left:18%;">or</p>
+
+<p style="margin-left:27%;"><b>csbench</b> ls
+<b>&minus;&minus;save&minus;bin&minus;name</b> bench1.data
+<b>&minus;&minus;save&minus;bin</b></p>
+
+<p style="margin-left:27%; margin-top: 1em"><b>csbench</b>
+pwd <b>&minus;&minus;save&minus;bin&minus;name</b>
+bench2.data <b>&minus;&minus;save&minus;bin</b></p>
+
+<p style="margin-left:27%; margin-top: 1em"><b>csbench
+&minus;&minus;load&minus;bin</b> bench1.data bench2.data</p>
+
+<p style="margin-left:18%; margin-top: 1em">Note that all
+options listed above in this man page are not usable in this
+mode. All the options listed below can be used (rename, set
+baseline, generate plots, export data etc.).</p>
+
+<h3>Analysis options
+<a name="Analysis options"></a>
+</h3>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="12%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;nrs</b>
+<i>NUM</i></p> </td>
+<td width="79%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Use <i>NUM</i>
+resamples when computing 95% confidence intervals using
+bootstrapping. Default value is 10000.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="20%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;stat&minus;test</b>
+<i>TEST</i></p> </td>
+<td width="71%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Specify
+statistical test to be used to calculate p-values. Possible
+values for <i>TEST</i> are:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p style="margin-top: 1em">mwu</p></td>
+<td width="1%"></td>
+<td width="38%">
+</td>
+<td width="35%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%"></td>
+<td width="1%"></td>
+<td width="38%">
+
+
+<p style="margin-top: 1em">Mann-Whitney U-test
+(default).</p> </td>
+<td width="35%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="8%">
+
+
+<p>t-test</p></td>
+<td width="1%"></td>
+<td width="38%">
+
+
+<p>Welch&rsquo;s t-test.</p></td>
+<td width="35%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Note that none
+of these tests is generally better. Welch&rsquo;s t-test
+(with null hypothesis u1=u2) is more correct statistically,
+but provides bad results when run count is small (less than
+20-30), however becomes increasingly better with bigger run
+counts. MWU (with null hypothesis that distributions are the
+same), on the other hand, provides consistent results up to
+big run counts (&#732;1000). Note that number of resamples
+used to calculate Welch&rsquo;s t-test p-value is controlled
+by <b>&minus;&minus;nrs</b> option.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="8%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;regr</b></p></td>
+<td width="83%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Perform linear
+regression of measurements in terms of benchmark
+parameters.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h3>Output options
+<a name="Output options"></a>
+</h3>
+<td width="9%"></td>
+<td width="18%"></td>
+<td width="73%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="18%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;baseline</b>
+<i>NUM</i></p> </td>
+<td width="73%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Use benchmark
+with number <i>NUM</i> (starting from 1) as baseline in
+comparisons.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="26%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;baseline-name</b>
+<i>NAME</i></p> </td>
+<td width="65%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Use benchmark
+with name <i>NAME</i> as baseline in comparisons.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="22%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;rename</b>
+<i>NUM NAME</i></p></td>
+<td width="69%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Rename
+benchmark with number <i>NUM</i> (starting from 1) to
+<i>NAME</i>. This name will be used in reports instead of
+the default one, which is a command string.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="35%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;rename-name</b>
+<i>OLD_NAME NAME</i></p></td>
+<td width="56%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Rename
+benchmark with name <i>OLD_NAME</i> to <i>NAME</i>.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="23%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;rename-all</b>
+<i>NAMES</i></p> </td>
+<td width="68%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Rename all
+benchmarks. <i>NAMES</i> is a comma-separated list of new
+benchmark names, whose length must be equal to benchmark
+count.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Example:</p>
+
+<p style="margin-left:27%;"><b>csbench
+&minus;&minus;rename&minus;all</b> one,two ls pwd</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="17%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;sort</b>
+<i>METHOD</i></p> </td>
+<td width="74%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Specify order
+of benchmarks in reports.</p>
+
+<p style="margin-left:18%; margin-top: 1em"><i>METHOD</i>
+can be one of the following:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p style="margin-top: 1em">auto</p></td>
+<td width="4%"></td>
+<td width="73%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%"></td>
+<td width="4%"></td>
+<td width="73%">
+
+
+<p style="margin-top: 1em">sort by speed if baseline is not
+set, keep original order otherwise (default).</p></td></tr>
+</table>
+
+<p style="margin-left:18%;">command</p>
+
+<p style="margin-left:27%;">keep original order.</p>
+
+<p style="margin-left:18%;">mean-time</p>
+
+<p style="margin-left:27%;">sort by mean time.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="22%">
+
+
+<p style="margin-top: 1em"><b>&minus;o</b>,
+<b>&minus;&minus;out&minus;dir</b> <i>DIR</i></p></td>
+<td width="69%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Place all
+outputs to directory <i>DIR</i>. Default value is
+&quot;.csbench&quot;.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="8%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;plot</b></p></td>
+<td width="83%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Generate plots
+to output directory. &quot;python3&quot; with
+&quot;matplotlib&quot; installed must be available at search
+path. Generates file &quot;plots_map.md&quot; containing
+list and descriptions of generated files.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="13%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;plot&minus;src</b></p> </td>
+<td width="78%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Save sources
+used to generate plots to output directory.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="28%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;plot&minus;backend</b>
+<i>BACKEND</i></p> </td>
+<td width="63%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Select backend
+used to generate plots. Possible values for <i>BACKEND</i>
+are:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%">
+
+
+<p>auto</p></td>
+<td width="4%"></td>
+<td width="51%">
+</td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="18%"></td>
+<td width="5%"></td>
+<td width="4%"></td>
+<td width="51%">
+
+
+<p>Select best available backend (default).</p></td>
+<td width="22%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%;">matplotlib</p>
+
+<p style="margin-left:27%;">Use python with
+&quot;matplotlib&quot; library.</p>
+
+<p style="margin-left:18%;">gnuplot</p>
+
+<p style="margin-left:27%;">Use gnuplot.</p>
+
+<p style="margin-left:18%; margin-top: 1em">Note that
+gnuplot version in inferior to matplotlib in terms of
+visuals. That is way matplotlib is chosen if available when
+using &quot;auto&quot; option.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="8%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;html</b></p></td>
+<td width="83%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Generate HTML
+report. Implies <b>&minus;&minus;plot</b>.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="6%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;csv</b></p></td>
+<td width="85%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Save benchmark
+results to CSV files placed in output directory. Also
+generates file &quot;csv_map.md&quot; containing list and
+descriptions of generated files.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="14%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;json</b>
+<i>FILE</i></p> </td>
+<td width="77%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Export
+benchmark results to <i>FILE</i> in JSON format.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="13%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;save&minus;bin</b></p> </td>
+<td width="78%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Save data in
+custom binary format. If
+<b>&minus;&minus;save&minus;bin&minus;name</b> option is not
+used, data is saved to file <b>data.csbench</b> placed in
+directory specified with <b>&minus;&minus;out&minus;dir</b>.
+For additional information see
+<b>&minus;&minus;load&minus;bin</b> option.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="26%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;save&minus;bin&minus;name</b>
+<i>NAME</i></p> </td>
+<td width="65%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Override file
+that will be used to save binary data (using
+<b>&minus;&minus;save&minus;bin</b> option) to. <i>NAME</i>
+is new file name.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h3>Miscellaneous options
+<a name="Miscellaneous options"></a>
+</h3>
+<td width="9%"></td>
+<td width="15%"></td>
+<td width="76%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="15%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;color</b>
+<i>WHEN</i></p> </td>
+<td width="76%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Use colored
+output. Possible values for <i>WHEN</i> are
+&quot;never&quot;, &quot;auto&quot;, &quot;always&quot;.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="24%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;progress&minus;bar</b>
+<i>WHEN</i></p> </td>
+<td width="67%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Display
+dynamically updated progress bar when running benchmarks.
+Possible values for <i>WHEN</i> are &quot;never&quot;,
+&quot;auto&quot;, &quot;always&quot;.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="36%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;progress&minus;bar-interval</b>
+<i>TIME</i></p> </td>
+<td width="55%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Set redraw
+interval of progress bar to <i>TIME</i>. Default is 100ms
+(100 milliseconds). <i>TIME</i> is a real number optionally
+followed by measurement units (&quot;s&quot;,
+&quot;ms&quot;, &quot;us&quot;, &quot;ns&quot;). If units
+are not specified, seconds are assumed.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="15%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;plot&minus;debug</b></p> </td>
+<td width="76%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Do not silence
+output of program which is used to make plots.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="29%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;python&minus;executable</b>
+<i>EXE</i></p> </td>
+<td width="62%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Use file
+<i>EXE</i> as python executable when making plots. Default
+is &quot;python3&quot;.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="14%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;clear&minus;out</b></p> </td>
+<td width="77%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Clear out
+directory (specified using
+<b>&minus;&minus;out&minus;dir</b>) before execution.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="8%">
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;help</b></p></td>
+<td width="83%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Print help
+message.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="9%"></td>
+<td width="12%">
+
+
+
+<p style="margin-top: 1em"><b>&minus;&minus;version</b></p> </td>
+<td width="79%">
+</td></tr>
+</table>
+
+<p style="margin-left:18%; margin-top: 1em">Print
+version.</p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+<p style="margin-left:9%; margin-top: 1em">Basic benchmark
+of &rsquo;ls&rsquo;:</p>
+
+<p style="margin-left:18%;"><b>csbench</b> ls</p>
+
+<p style="margin-left:9%; margin-top: 1em">Comparison
+benchmark between &rsquo;ls&rsquo; and
+&rsquo;lsd&rsquo;:</p>
+
+<p style="margin-left:18%;"><b>csbench</b> ls lsd</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:9%; margin-top: 1em">Vinogradov Ilya
+&lt;holodmoose@gmail.com&gt;</p>
+
+<p style="margin-left:9%; margin-top: 1em">Source, bug
+tracker, and additional information can be found on GitHub:
+<i>https://github.com/Holodome/csbench</i></p>
+<hr>
+</body>
+</html>
